@@ -52,7 +52,14 @@ Revert the config after the test.
 
 ## AI usage (honest log)
 
-Per the test rubric, document how AI tools were used (if applicable).
+Per the rubric, this documents **how** AI was used—not to hide it.
 
-- **Tool:** e.g. Cursor + AI assistant, local `question2.md` guide.  
-- **What you should own:** You can explain each function, why `MARKET_ASSETS` is data-driven, how IST is computed, and how failures become logged `N/A` rows without stopping the run.
+- **Tool:** Cursor with an integrated AI assistant (Claude), plus repo-local guides in `question2.md`.
+- **Prompts (paraphrased):**  
+  - Implement live quotes for BTC (crypto), NIFTY (Indian index), and gold per `question2.md` using free APIs—CoinGecko for crypto and yfinance for Yahoo tickers—with no early exit on a single failure.  
+  - Drive fetches from a single `MARKET_ASSETS` config list; format an IST-stamped Unicode box table with comma-separated prices and two decimals.  
+  - On fetch or parse errors, log `[ERROR] Failed to fetch …` and still emit a row with **`N/A`** for price; avoid bare `except` and silent `pass`.  
+  - Add Windows-friendly UTF-8 stdout setup for box-drawing characters; document pip install and how to sanity-check error handling.
+- **What the model got right:** Data-driven asset loop; split CoinGecko HTTP JSON vs yfinance history path; IST via fixed offset; table padding pattern; error path that preserves three rows.
+- **What I verified or adjusted:** Chose real endpoints and tickers (`^NSEI`, `GC=F`, CoinGecko `simple/price`); confirmed NaN/empty-history handling before formatting; re-read PDF vs `question2.md` on GOLD currency (USD per Yahoo contract unit, not INR/g in the sample); ran forced-failure tests for Step 8.
+- **What I own:** I can explain each function in review: why `MARKET_ASSETS` is the single source of truth, how IST is computed, and how exceptions become logged `N/A` rows without stopping the run.

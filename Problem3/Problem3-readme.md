@@ -87,7 +87,17 @@ Task 01 math is reused by **loading** `Problem1/Problem1.py` at runtime (`comput
 
 ## AI usage (honest log)
 
-If you used Cursor, Copilot, or another assistant, say **what you asked**, **what you verified by hand** (prompt wording, JSON keys, Gemini safety blocks), and **what you own** in review (e.g. metric injection, parsing, CLI).
+Per the rubric, this documents **how** AI was used—not to hide it.
+
+- **Tool:** Cursor with an integrated AI assistant (Claude), plus repo-local guides in `question3.md`.
+- **Prompts (paraphrased):**  
+  - Wire **Google Gemini** with `GEMINI_API_KEY` from the environment (no committed secrets); keep the **prompt in code** via `build_prompt` and support multiple portfolios (CLI JSON + built-in demos).  
+  - Reuse Task 01 by loading `Problem1/Problem1.py` at runtime and injecting **`compute_risk_metrics`** outputs into the prompt (post-crash value, runway, ruin test, largest risk asset, concentration).  
+  - Require **JSON-only** replies with fixed keys (`summary`, `doing_well`, `change_needed`, `verdict`); parse and validate **`verdict`** against `Aggressive` | `Balanced` | `Conservative`; print **RAW API RESPONSE** and **STRUCTURED OUTPUT** as separate sections.  
+  - Add bonus **tone** modes and an optional **critic** second call; handle 429 / model quota and messy model output in README troubleshooting.
+- **What the model got right:** Prompt scaffolding (persona, grounded metrics, JSON contract); `parse_explainer_response` / JSON extraction helpers; CLI with `--demo`, `--portfolio`, `--tone`, `--critic`; default model choice aligned with free-tier quota notes.
+- **What I verified or adjusted:** Wording in `build_prompt` and `TONE_INSTRUCTIONS` against the PDF; ran real Gemini calls and checked raw vs parsed output; tightened verdict validation and error messages; confirmed `Problem1` path resolution from the repo layout; chose `python-dotenv` / `.env` usage locally without committing keys.
+- **What I own:** I can explain in review how metrics enter the prompt, how `_extract_json_object` deals with prose around JSON, why two print sections exist, and how the critic pass differs from the main explainer call.
 
 ## Troubleshooting
 
