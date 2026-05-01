@@ -4,6 +4,18 @@ This folder implements the **Crash Scenario Simulator** CLI from the Timecell in
 
 ### Section 1: What I Built
 
+Most portfolio tools tell you how much you could make. Timecell asks a different question — what does failure look like? That line stuck with me.
+
+So for Task 4, I wanted to build a failure detector. Something that takes your portfolio and runs it through real historical crashes — 2008, COVID, the crypto winter — and tells you plainly: here's the scenario that ruins you, and here's exactly why.
+
+So it can give answer for most fearful question: will my portfolio survive if market crash like 2020 covid happens again? So it will give answer what happens to your portfolio in worst case situation.
+
+Because the honest truth is, a portfolio that survives a crypto winter but gets wiped out by a 2008-style crash isn't balanced — it's just lucky so far.
+
+I also added one LLM call that I think is the most interesting part — it tells you the single assumption you'd need to be wrong about for your portfolio to survive its worst-case scenario. That felt like something a real advisor would say.
+
+This is a feature Timecell could ship tomorrow. That's why I built it.
+
 `crash_simulator.py` is the entry point. It loads a portfolio (JSON file, or a built-in preset), **normalises allocations** if they do not sum to 100% (with a warning), runs four historical scenarios from `scenarios.py`, prints a **Rich** comparison table (pass/fail vs a **12-month runway** rule, post-crash value, loss, killing asset; default **−20%** moves for unknown asset names are marked with `*` and footnoted), highlights the **most dangerous** scenario, then—unless you pass **`--no-llm`**—calls **`llm_insight.py`** (Google **Gemini**, key via **`GEMINI_API_KEY`** / `.env`). There is **no** web UI and **no** charting libraries; output is terminal-only. **Custom mode** (`--custom`) prompts for per-asset moves and appends a **Custom User-Defined Scenario** row.
 
 **Run (from this folder):**
